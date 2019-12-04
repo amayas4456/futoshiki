@@ -3,7 +3,7 @@ name: Python application
 on:
   push:
     paths-ignore:
-      - '**README.md'
+      - 'README.md'
     jobs:
       build:
         runs-on: ubuntu-latest
