@@ -72,10 +72,7 @@ class Futoshiki():
             if verbose:
                 print('No solution :(')
             return False
-        else:
-            if verbose:
-                print(self.matrix)
-            return self.matrix
+        return self.matrix # Solved!
 
     def solving(self):
         cell = self.find_next_empty()
