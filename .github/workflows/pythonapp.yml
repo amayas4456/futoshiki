@@ -1,6 +1,9 @@
 name: Build and test
 
-on: [push]
+on:
+  push:
+    ignore-paths:
+      - 'README.md'
 
 jobs:
   build:
