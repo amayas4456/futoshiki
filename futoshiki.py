@@ -72,7 +72,9 @@ class Futoshiki():
             if verbose:
                 print('No solution :(')
             return False
-        return self.matrix # Solved!
+        if verbose:
+            print(self.matrix)
+        return self.matrix
 
     def solving(self):
         cell = self.find_next_empty()
@@ -89,6 +91,35 @@ class Futoshiki():
                     return True
                 self.matrix[cell[0]][cell[1]] = 0
         return False
+    
+    def symetric_matrix(self):
+        """Constructs a bidimensional matrix interspersing the constrints with the values
+        
+        Returns:
+            bidimensional list -- 2D matrix of len(self.matrix) * 2 - 1 size
+        """        
+        result = []
+        cconst_new = []
+
+        for i in range(len(self.cconst)):
+            temp_list = []
+            for j in range(len(self.cconst[i])):
+                temp_list.append(self.cconst[i][j])
+                if j < len(self.cconst[i]) - 1:
+                    temp_list.append(0)
+            cconst_new.append(temp_list)
+
+        for row in range(len(self.matrix)):
+            temp_list = []
+            for cell in range(len(self.matrix[row])):
+                temp_list.append(self.matrix[row][cell])
+                if cell <= len(self.rconst[row]) - 1:
+                    temp_list.append(self.rconst[row][cell])
+            result.append(temp_list)
+            if row <= len(self.cconst) - 1:
+                result.append(cconst_new[row])
+
+        return result
 
 def main():
 
@@ -114,6 +145,10 @@ def main():
 
     puzzle = Futoshiki(table, row_constraints, col_constraints)
     puzzle.solve(verbose=True)
+
+    printable = puzzle.symetric_matrix()
+    for row in printable:
+        print(row)
 
 if __name__ == '__main__':
     main()
