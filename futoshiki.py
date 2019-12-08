@@ -18,6 +18,15 @@ class Futoshiki():
         col_constraints = np.zeros((size-1, size), dtype=np.int8).tolist()
         return (matrix, row_constraints, col_constraints)
 
+    def get_matrix(self):
+        return self.matrix
+    
+    def get_row_constraints(self):
+        return self.rconst
+    
+    def get_col_constraints(self):
+        return self.cconst
+
     def satisfies_constraints(self, value, row_num, col_num):
         # Constraints in the row
         if col_num > 0:
