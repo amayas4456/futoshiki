@@ -1,10 +1,22 @@
+import random
+import numpy as np
+
 class Futoshiki():
 
-    def __init__(self, matrix, row_constraints, col_constraints):
-        self.matrix = matrix
-        self.rconst = row_constraints
-        self.cconst = col_constraints
-        self.size = len(matrix[0])
+    def __init__(self, matrix = False, row_constraints = False, col_constraints = False, size=4):
+        if not matrix:
+            self.matrix, self.rconst, self.cconst = self.init_empty_matrix(size)
+        else:
+            self.matrix = matrix
+            self.rconst = row_constraints
+            self.cconst = col_constraints
+        self.size = len(self.matrix[0])
+    
+    def init_empty_matrix(self, size):
+        matrix = np.zeros((size, size), dtype=np.int8).tolist()
+        row_constraints = np.zeros((size, size-1), dtype=np.int8).tolist()
+        col_constraints = np.zeros((size-1, size), dtype=np.int8).tolist()
+        return (matrix, row_constraints, col_constraints)
 
     def satisfies_constraints(self, value, row_num, col_num):
         # Constraints in the row
@@ -120,35 +132,58 @@ class Futoshiki():
                 result.append(cconst_new[row])
 
         return result
+    
+    def fill_matrix(self):
+        # BUG: for some reason, some puzzles don't get solved with backtracking...
+        is_filled = False
+        while not is_filled:
+            # Fill main diagonal with random random numbers
+            for i in range(self.size):
+                self.matrix[i][i] = random.randint(1, self.size)
+            
+            # Fill the rest of values
+            is_filled = self.solve()
 
-def main():
+    def fill_constraints(self):
+        # Row constraints
+        for row in range(len(self.rconst)):
+            for col in range(len(self.rconst[row])):
+                if self.matrix[row][col] > self.matrix[row][col+1]:
+                    self.rconst[row][col] = 'gt'
+                else:
+                    self.rconst[row][col] = 'lt'
+        
+        # Col constraints
+        for row in range(len(self.cconst)):
+            for col in range(len(self.cconst[row])):
+                if self.matrix[row][col] > self.matrix[row+1][col]:
+                    self.cconst[row][col] = 'gt'
+                else:
+                    self.cconst[row][col] = 'lt'
 
-    table = [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ]
-
-    row_constraints = [
-        [0, 'lt', 0],
-        [0, 0, 0],
-        [0, 'lt', 0],
-        [0, 0, 'lt']
-    ]
-
-    col_constraints = [
-        [0, 'gt', 0, 0],
-        ['lt', 0, 0, 0],
-        [0, 0, 0, 'gt']
-    ]
-
-    puzzle = Futoshiki(table, row_constraints, col_constraints)
-    puzzle.solve(verbose=True)
-
-    printable = puzzle.symetric_matrix()
-    for row in printable:
-        print(row)
-
-if __name__ == '__main__':
-    main()
+    def remove_random_values_in_matrix(self, table, k):
+        """Removes the amount of numbers specified in a given matrix
+        
+        Arguments:
+            table {int[][]} -- Reference to the matrix where the values will be removed
+            k {int} -- Number of values to remove
+        """
+        to_remove = k
+        while to_remove != 0:
+            row = random.randint(0, len(table)-1)
+            col = random.randint(0, len(table[0])-1)
+            if table[row][col] != 0:
+                to_remove = to_remove - 1
+                table[row][col] = 0
+    
+    def remove_random_values(self):
+        # TODO: remove proportional amount of values in relation to matrix size
+        # TODO: play with this + matrix size to determine difficulty
+        self.remove_random_values_in_matrix(self.matrix, k=12)
+        self.remove_random_values_in_matrix(self.rconst, k=9)
+        self.remove_random_values_in_matrix(self.cconst, k=9)
+    
+    def create_puzzle(self):
+        self.fill_matrix()
+        self.fill_constraints()
+        self.remove_random_values()
