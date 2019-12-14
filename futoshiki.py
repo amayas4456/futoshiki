@@ -143,10 +143,10 @@ class Futoshiki():
         return result
     
     def fill_matrix(self):
-        # BUG: for some reason, some puzzles don't get solved with backtracking...
         is_filled = False
         while not is_filled:
             # Fill main diagonal with random random numbers
+            # This will minimize the risk of invalid puzzles because of same number in row or column
             for i in range(self.size):
                 self.matrix[i][i] = random.randint(1, self.size)
             
