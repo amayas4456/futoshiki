@@ -56,4 +56,4 @@ def create_image(puzzle):
     _add_row_constraints(canvas, puzzle.get_row_constraints())
     _add_col_constraints(canvas, puzzle.get_col_constraints())
 
-    canvas.show()
+    return canvas
