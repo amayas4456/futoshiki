@@ -189,8 +189,8 @@ class Futoshiki():
         # TODO: remove proportional amount of values in relation to matrix size
         # TODO: play with this + matrix size to determine difficulty
         self.remove_random_values_in_matrix(self.matrix, k=12)
-        self.remove_random_values_in_matrix(self.rconst, k=9)
-        self.remove_random_values_in_matrix(self.cconst, k=9)
+        self.remove_random_values_in_matrix(self.rconst, k=random.randint(9,11))
+        self.remove_random_values_in_matrix(self.cconst, k=random.randint(9,11))
     
     def create_puzzle(self):
         self.fill_matrix()
