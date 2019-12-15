@@ -4,7 +4,7 @@ import tempfile
 
 def get_config():
     with open('config.yaml') as ymlfile:
-        return yaml.load(ymlfile) # TODO: add param Loader=xxx
+        return yaml.load(ymlfile, Loader=yaml.Loader)
 
 def get_api():
     cfg = get_config()
